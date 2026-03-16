@@ -10,9 +10,9 @@ public class Engineer(string id, string name, string surname, string patronymic,
         return $"{Name}, {Surname}, {Patronymic}";
     }
 
-    public void AddRepairableDevice(DeviceType device)
+    public void AddRepairableDevice(DeviceType type)
     {
-        RepairableDevices.Add(device);
+        RepairableDevices.Add(type);
     }
 
     public bool CanRepair(ADevice device)
