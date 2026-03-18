@@ -4,7 +4,7 @@ namespace ElectronicRepairShop.Core.Entities.Parts;
 
 
 /// <summary>
-/// Класс представляет информацияю о запчасти
+/// Класс представляет информацияю о запчасти 
 /// </summary>
 public class Part
 {

@@ -14,9 +14,6 @@ public class WarehouseItem
     public decimal PurchasePrice { get; set; }
     public decimal SellingPrice { get; init; }
     public int QuantityInStock { get; set; }
-
-    /// <summary> 
-    /// Артикул запчасти. Возвращает значение из <see cref="Part.Article"/>. 
-    /// </summary>
+    
     public string Article => Part.Article;
 }
