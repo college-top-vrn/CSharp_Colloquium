@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Workshop.Core\Workshop.Core.csproj" />
+      <ProjectReference Include="..\ElectronicRepairShop.Core\ElectronicRepairShop.Core.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workshop.Core", "Workshop.Core\Workshop.Core.csproj", "{FF4D9510-2E0D-43C1-AFAC-CC9948A1685B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectronicRepairShop.Core", "ElectronicRepairShop.Core\ElectronicRepairShop.Core.csproj", "{FF4D9510-2E0D-43C1-AFAC-CC9948A1685B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workshop_Tests", "Workshop_Tests\Workshop_Tests.csproj", "{1F625E37-6102-4308-8B94-9DBAA171F3B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectronicRepairShop.Tests", "ElectronicRepairShop.Tests\ElectronicRepairShop.Tests.csproj", "{1F625E37-6102-4308-8B94-9DBAA171F3B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

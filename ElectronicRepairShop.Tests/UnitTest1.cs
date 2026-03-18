@@ -1,4 +1,4 @@
-﻿namespace Workshop_Tests;
+﻿namespace ElectronicRepairShop.Tests;
 
 public class UnitTest1
 {
