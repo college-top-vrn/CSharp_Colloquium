@@ -23,9 +23,9 @@ public record RepairOrder
     public Worker Worker { get; }
     public Device Device { get; }
     public DateOnly ReceiveDate { get; }
-    public DateOnly CompletionDate { get; init; }
-    public RepairStatus Status { get; }
+    public DateOnly CompletionDate { get; set; }
+    public RepairStatus Status { get; set; }
     public HashSet<Service> Services { get; }
     public HashSet<Part> UsedParts { get; }
-    public decimal TotalCost { get; init; }
+    public decimal TotalCost { get; set; }
 }
