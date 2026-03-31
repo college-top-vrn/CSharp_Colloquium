@@ -1,158 +1,218 @@
-# CSharp. Коллоквиум
+```mermaid
+classDiagram
+    namespace Persons {
+        class Person {
+            <<Abstract>>
+            -Guid Id
+            -FullName FullName
+            -ContactInformation ContactInformation
+            +Person(string id, FullName fullName, ContactInformation contactInformation)
+            +GetId() Guid
+            +GetFullName() FullName
+            +GetContactInformation() ContactInformation
+        }
 
-## Задание: библиотека классов «Мастерская по ремонту электроники»
+        class ContactInformation {
+            -string PhoneNumber
+            -string Email
+            +GetPhoneNumber() string
+            +GetEmail() string
+        }
 
-### Цель работы
+        class FullName {
+            -string Name
+            -string Surname
+            -string Patronymic
+            +GetName() string
+            +GetSurname() string
+            +GetPatronymic() string
+        }
 
-Разработать библиотеку классов для автоматизации учёта заказов в мастерской по ремонту электроники. Библиотека должна моделировать основные сущности предметной области и предоставлять функциональность для работы с клиентами, устройствами, инженерами, услугами, запчастями и заказами.
+        class Client {
+            +Client(string id, FullName fullName, ContactInformation contactInformation)
+        }
 
-### Описание предметной области
+        class Worker {
+            -HashSet~Service~ Specializations
+            +Worker(string id, FullName fullName, ContactInformation contactInformation)
+            +GetSpecializations() Specializations
+            +FindSpecialization(string id) Service?
+            +AddSpecialization(Service service) void
+            +DeleteSpecialization(string id) void
 
-Мастерская принимает в ремонт различные электронные устройства: ноутбуки, смартфоны, планшеты, мониторы и т.д. Каждый заказ включает данные о клиенте, устройстве, инженере, выполняющем ремонт, список оказанных услуг и использованных запчастей. Необходимо вести складской учёт запчастей и назначать инженеров с учётом их специализации. Система должна позволять отслеживать статус заказа, рассчитывать итоговую стоимость и получать отчётность по выручке. Получать и сохранять данные в JSON-файле.
+        }
+    }
+    Person <|-- Client
+    Person <|-- Worker
+    ContactInformation <--* Person
+    FullName <--* Person
+    Client <-- RepairOrder
+    Worker <-- RepairOrder
 
-### Требования к реализации
-- Язык программирования – C#
-- Парадигма – объектно-ориентированное программирование (наследование, инкапсуляция, полиморфизм)
-- Тип проекта – библиотека классов (Class Library)
-- Документирование – использовать XML-комментарии для публичных членов
-- Тестирование - написать unit-тесты и интеграционные тесты
+    namespace Workshop {
+        class Device {
+            <<Abstract>>
+            -Guid Id
+            -DeviceType Type
+            -string Brand
+            -string Model
+            -string SerialNumber
+            +Device(string id, DeviceType type, string brand, string model, string serialNumber)
+            +GetId() Guid
+            +GetType() DeviceType
+            +GetBrand() string
+            +GetModel() string
+            +GetSerialNumber() string
+        }
 
----
----
+        class Service {
+            -Guid Id
+            -string Name
+            -decimal Price
+            +Service(string id, string name, decimal price)
+            +GetId() Guid
+            +GetName() string
+            +GetPrice() decimal
+        }
 
-# Состав классов и их характеристики (примерный вариант, можно изменять)
 
-## 1. Клиент (Client)
-**Свойства:**
-- `int Id` — уникальный идентификатор
-- `string FullName` — ФИО
-- `string Phone` — телефон
-- `string Email` — необязательный
 
-**Конструктор** с параметрами для обязательных полей (`Id`, `FullName`, `Phone`).
+        class Part {
+            -Guid Id
+            -string Name
+            -string Article
+            -decimal PurchasePrice
+            -decimal SellingPrice
+            +Part(string id, string name, string article, decimal purchasePrice, decimal sellingPrice)
+            +GetId() Guid
+            +GetName() string
+            +GetArticle() string
+            +GetPurchasePrice() decimal
+            +GetSellingPrice() decimal
+        }
 
-**Переопределить** `ToString()` для вывода ФИО и телефона.
+        class DeviceType {
+            <<Enum>>
+            +LAPTOP
+            +SMARTPHONE
+            +WASHINGMACHINE
+        }
 
----
+        class RepairStatus {
+            <<Enum>>
+            +REJECTED
+            +RECEIVED
+            +DIAGNOSTIC
+            +INPROGRESS
+            +READY
+            +ISSUED
+        }
 
-## 2. Устройство (Device) – абстрактный класс
-**Свойства:**
-- `int Id`
-- `string Brand`
-- `string Model`
-- `string SerialNumber`
-- `string IssueDescription` — описание неисправности
+        class RepairOrder {
+            -Guid id
+            -Client Client
+            -Device Device
+            -Worker Worker
+            -DateTime ReceiveDate
+            -DateTime CompletionDate
+            -RepairStatus Status
+            -HashSet~Service~ Services
+            -HashSet~Part~ UsedParts
+            -decimal TotalCost
+            +RepairOrder(string id, Client client, Worker worker, Device device, DateTime receiveDate)
+            +GetId() Guid
+            +GetClient() Client
+            +GetDevice() Device
+            +GetWorker() Worker
+            +GetReceiveDate() DateTime
+            +GetCompletionDate() DateTime
+            +GetStatus() RepairStatus
+            +GetService() HashSet~Service~
+            +GetUsedParts() HashSet~Part~
+            +GetTotalCost() decimal
 
-**Абстрактный метод** `string GetDeviceType()` – возвращает тип устройства (например, "Ноутбук", "Смартфон").
+        }
+        
 
-**Виртуальный метод** `void PrintInfo()` – выводит в консоль (или возвращает строку) основные характеристики.
+        class RepairOrderService {
+            +ChangeRepairStatus(RepairOrder order, RepairStatus status) void
+            +AddPart(RepairOrder order, Part part, uint quantity) void
+            +FinishRepair(RepairOrder order) void
+        }
+    }
+    Device <--* RepairOrder
+    Service <-- Worker
+    Service <-- RepairOrder
+    Part <-- RepairOrder
+    DeviceType <--* Device
+    RepairStatus <-- RepairOrder
+    RepairOrder <-- RepairOrderService
 
----
+    namespace Wrappers {
+        class IWrapper {
+            <<Interface>>
+            #Add~T~(T newData) void
+            #Find~T1, T2~(T1 dataForFinding) T2
+            #Update~T1, T2~(T1 dataForFinding, T2 newData) void
+            #Delete~T~(T dataForFinding) void
+        }
 
-## 3. Конкретные типы устройств (минимум два наследника, например:)
-- **Laptop** – добавляет свойство `string Processor`.
-- **Smartphone** – добавляет свойство `string OperatingSystem`.
-- **Tablet** – добавляет свойство `double ScreenSize` (дюймы).
+        class Services {
+            -HashSet~Service~ Services
+            +GetServices() HashSet~Service~
+            +Add~T~(T newData) void
+            +Find~T1, T2~(T1 dataForFinding) T2
+            +Update~T1, T2~(T1 dataForFinding, T2 newData) void
+            +Delete~T~(T dataForFinding) void
+        }
 
-Реализовать унаследованные абстрактные методы.
+        class Workers {
+            -HashSet~Worker~ Workers
+            +GetWorkers() HashSet~Worker~
+            +Add~T~(T newData) void
+            +Find~T1, T2~(T1 dataForFinding) T2
+            +Update~T1, T2~(T1 dataForFinding, T2 newData) void
+            +Delete~T~(T dataForFinding) void
+        }
 
----
+        class Warehouse {
+            -HashSet~Part~ Parts
+            +GetParts() HashSet~Part~
+            +Add~T~(T newData) void
+            +Find~T1, T2~(T1 dataForFinding) T2
+            +Update~T1, T2~(T1 dataForFinding, T2 newData) void
+            +Delete~T~(T dataForFinding) void
+        }
 
-## 4. Инженер (Engineer)
-**Свойства:**
-- `int Id`
-- `string FullName`
-- `List<DeviceType> Specialization` — например, перечисление возможных типов устройств
+        class RepairOrderHistory {
+            -HashSet~RepairOrder~ Orders
+            +GetOrders() HashSet~RepairOrder~
+            +Add~T~(T newData) void
+            +Find~T1, T2~(T1 dataForFinding) T2
+            +Update~T1, T2~(T1 dataForFinding, T2 newData) void
+            +Delete~T~(T dataForFinding) void
+        }
+    }
+    IWrapper <|.. Services
+    IWrapper <|.. Workers
+    IWrapper <|.. Warehouse
+    IWrapper <|.. RepairOrderHistory
+    Service <--o Services
+    Worker <--o Workers
+    Part <--o Warehouse
+    RepairOrder <--o RepairOrderHistory
 
-**Метод** `bool CanRepair(Device device)` – проверяет, соответствует ли специализация инженера типу данного устройства.
+    namespace FileHandlers {
+        class IFileHandler {
+            <<Interface>>
+            #ReadData~T~(string filePath) List~T~
+            #WriteData~T~(string filePath, List~T~) void
+        }
 
-**Переопределить** `ToString()`.
-
----
-
-## 5. Услуга (Service)
-**Свойства:**
-- `int Id`
-- `string Name` (например, "Диагностика", "Замена экрана")
-- `decimal Price`
-
-**Конструктор** с параметрами для всех свойств.
-
----
-
-## 6. Запчасть (Part)
-**Свойства:**
-- `int Id`
-- `string Name`
-- `string Article` (артикул)
-- `decimal PurchasePrice` (закупочная цена)
-- `decimal SellingPrice` (цена для клиента)
-- `int QuantityInStock` (остаток на складе)
-
-**Методы:**
-- `void DecreaseStock(int quantity)` – уменьшает остаток (выбрасывает исключение при нехватке)
-- `void IncreaseStock(int quantity)` – увеличивает остаток
-
----
-
-## 7. Заказ на ремонт (RepairOrder)
-**Свойства:**
-- `int Id` — номер заказа
-- `Client Client`
-- `Device Device`
-- `Engineer Engineer` (может быть `null` до назначения)
-- `DateTime ReceivedDate` — дата приёма
-- `DateTime? CompletionDate` — дата завершения
-- `RepairStatus Status` — перечисление
-- `List<Service> Services`
-- `List<(Part Part, int Quantity)> UsedParts`
-- `decimal TotalCost` — вычисляемое
-
-**Конструктор** с параметрами: клиент, устройство, описание неисправности (заполняет `ReceivedDate`, начальный статус, создаёт пустые списки).
-
-**Методы:**
-- `void AddService(Service service)` – добавляет услугу в список
-- `void AddPart(Part part, int quantity)` – добавляет запчасть, предварительно проверив наличие на складе (вызывает `part.DecreaseStock(quantity)`). При нехватке выбрасывает исключение `InvalidOperationException`
-- `decimal CalculateTotalCost()` – пересчитывает общую стоимость (сумма цен услуг + сумма `part.SellingPrice * quantity` для каждой запчасти) и возвращает её
-- `void ChangeStatus(RepairStatus newStatus)` – изменяет статус с простейшей проверкой допустимости перехода (например, из "Завершён" нельзя перейти обратно в "В работе")
-- `void CompleteOrder()` – устанавливает `CompletionDate = DateTime.Now` и статус **Готов**
-
----
-
-## 8. Перечисление RepairStatus
-- `Received` — Принят
-- `Diagnostics` — Диагностика
-- `InProgress` — В ремонте
-- `Ready` — Готов к выдаче
-- `Issued` — Выдан
-- `Rejected` — Отказ от ремонта
-
----
-
-## 9. Мастерская (Workshop) – класс-менеджер
-**Содержит коллекции:**
-- `List<Client> Clients`
-- `List<Device> Devices`
-- `List<Engineer> Engineers`
-- `List<RepairOrder> Orders`
-- `List<Part> Parts`
-- `List<Service> Services`
-
-**Методы:**
-- `void AddClient(Client client)`
-- `void AddEngineer(Engineer engineer)`
-- `void AddPart(Part part)`
-- `void AddService(Service service)`
-- `RepairOrder CreateOrder(Client client, Device device, string issueDescription)` – создаёт новый заказ, добавляет в список заказов, сохраняет устройство и клиента (если их ещё нет в коллекциях – тоже добавляет). Возвращает созданный заказ.
-- `bool AssignEngineer(int orderId, int engineerId)` – назначает инженера на заказ, если `engineer.CanRepair(order.Device)`. Возвращает `true` при успехе.
-- `List<RepairOrder> GetOrdersByStatus(RepairStatus status)` – фильтрует заказы по статусу.
-- `decimal GetRevenue(DateTime from, DateTime to)` – сумма `TotalCost` заказов, выданных (`Status == Issued`) в указанном периоде.
-- `void RestockPart(int partId, int quantity)` – увеличивает остаток запчасти.
-
----
-
-### Дополнительные требования
-- Везде, где используется идентификатор, считать, что он задаётся извне (можно использовать автоматическую генерацию на уровне приложения, но в библиотеке достаточно просто хранить).
-- При нехватке запчастей на складе в методе `AddPart` выбрасывать исключение с информативным сообщением.
-- При назначении инженера, не подходящего по специализации, выбрасывать исключение или возвращать `false` (на усмотрение).
-- **Реализовать интерфейс `IRepairable`** с методами `void Diagnose()` и `void Repair()`? (по желанию, для демонстрации интерфейсов).
+        class JsonHandler {
+            +ReadData~T~(string filePath) List~T~
+            +WriteData~T~(string filePath, List~T~) void
+        }
+    }
+    IFileHandler <|.. JsonHandler
+```
